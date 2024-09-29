@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Application</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="weather-container">
+      <h1>Welcome to Weather Application</h1>
+      <p class="sub-heading">Now you can search the weather of your city</p>
+      <p class="sub-heading massage"></p>
+      <form id="weatherForm" class="weather-form form">
+        <div class="form-group">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            placeholder="type your country to get your weather"
+          />
+          <small>try your country’s first two letters (Ex: BD)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            placeholder="type your city to get your weather"
+          />
+        </div>
+
+        <button type="submit" id="getWeatherBtn">Get Weather</button>
+      </form>
+
+      <div class="weather-info">
+        <h2 class="city-name"></h2>
+        <img src="" alt="weather-situation" id="icon" />
+        <div class="weather-status">
+          <span class="weather-condition"></span>
+        </div>
+        <ul class="weather-details">
+          <li>Temperature: <span id="w-temp"></span></li>
+          <hr />
+          <br />
+          <li>Pressure: <span id="w-pressure"></span></li>
+          <hr />
+          <br />
+          <li>Humidity: <span id="w-humidity"></span></li>
+        </ul>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
