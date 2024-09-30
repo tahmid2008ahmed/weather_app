@@ -2,6 +2,7 @@ const weatherData = {
   country: "",
   city: "",
   API_KEY: "2de4b6d9ae0c1521950ad724458c869d",
+
   async getWeather() {
     try {
       const res = await fetch(
@@ -29,10 +30,12 @@ const weatherData = {
 const storage = {
   city: "",
   country: "",
+
   saveItem() {
     localStorage.setItem("BD-city", this.city);
     localStorage.setItem("BD-country", this.country);
   },
+
   getItem() {
     const city = localStorage.getItem("BD-city", this.city);
     const country = localStorage.getItem("BD-country", this.country);
@@ -162,55 +165,65 @@ const UI = {
     formElm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      //get input values
+      // get input values
       const inputValues = this.getInputValues();
       // If inputValues is undefined, do nothing
       if (!inputValues) return;
 
       // now we won't get any undefined value
-      const { country, city } = inputValues;
+      let { country, city } = inputValues;
 
-      //sending country and city
+      // Check for default values if inputs are empty
+      if (!city) {
+        city = "Gazipur";
+      }
+      if (!country) {
+        country = "Bangladesh";
+      }
+
+      // sending country and city
       weatherData.city = city;
       weatherData.country = country;
 
-      //send data to API
+      // send data to API
       const informations = await this.handleData();
 
       // If the city or country is not found, don't save it to storage or populate UI
       if (!informations) return;
 
-      //update to localStorage after confirming valid data
+      // update to localStorage after confirming valid data
       storage.city = city;
       storage.country = country;
       storage.saveItem();
 
-      //clear the values after submit
+      // clear the values after submit
       this.clearInputValue();
 
-      //populate UI with valid information
+      // populate UI with valid information
       this.populateUI(informations);
     });
 
     window.addEventListener("DOMContentLoaded", async () => {
       let { city, country } = storage.getItem();
 
-      // If no values in storage, prompt the user to enter city and country
-      if (!city || !country) {
-        this.showMassage(
-          "Please enter a valid city and country to get weather information."
-        );
-        return; // No further action if there is no saved city/country
+      // Check for default values in case of missing data in localStorage
+      if (!city) {
+        city = "Gazipur";
+      }
+      if (!country) {
+        country = "Bangladesh";
       }
 
       weatherData.city = city;
       weatherData.country = country;
 
-      //send data to API
+      // send data to API
       const informations = await this.handleData();
 
-      //populate UI only if we have valid information
-      this.populateUI(informations);
+      // populate UI only if we have valid information
+      if (informations) {
+        this.populateUI(informations);
+      }
     });
   },
 };
