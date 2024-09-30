@@ -158,6 +158,7 @@ const UI = {
 
   init() {
     const { formElm } = this.loadSelectors();
+
     formElm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -165,32 +166,41 @@ const UI = {
       const inputValues = this.getInputValues();
       // If inputValues is undefined, do nothing
       if (!inputValues) return;
+
       // now we won't get any undefined value
       const { country, city } = inputValues;
 
       //sending country and city
       weatherData.city = city;
       weatherData.country = country;
+
+      //send data to API
+      const informations = await this.handleData();
+
+      // If the city or country is not found, don't save it to storage or populate UI
+      if (!informations) return;
+
+      //update to localStorage after confirming valid data
       storage.city = city;
       storage.country = country;
-
-      //update to localStorage
       storage.saveItem();
 
       //clear the values after submit
       this.clearInputValue();
 
-      //send data to API
-      const informations = await this.handleData();
-      //populate ti UI
+      //populate UI with valid information
       this.populateUI(informations);
     });
 
     window.addEventListener("DOMContentLoaded", async () => {
       let { city, country } = storage.getItem();
+
+      // If no values in storage, prompt the user to enter city and country
       if (!city || !country) {
-        city = "Khulna";
-        country = "Bangladesh";
+        this.showMassage(
+          "Please enter a valid city and country to get weather information."
+        );
+        return; // No further action if there is no saved city/country
       }
 
       weatherData.city = city;
@@ -198,7 +208,8 @@ const UI = {
 
       //send data to API
       const informations = await this.handleData();
-      //populate ti UI
+
+      //populate UI only if we have valid information
       this.populateUI(informations);
     });
   },
